@@ -19,7 +19,7 @@
 }
 *{box-sizing:border-box}
 html{background:var(--deep);color:var(--foam);-webkit-text-size-adjust:100%}
-body{margin:0;font-family:var(--serif);font-size:1.15rem;line-height:1.6;background:var(--deep)}
+body{margin:0;overflow-x:clip;font-family:var(--serif);font-size:1.15rem;line-height:1.6;background:var(--deep)}
 #sea{position:fixed;inset:0;width:100vw;height:100vh;display:block;z-index:0}
 .page{position:relative;z-index:1}
 a{color:var(--foam);text-decoration-color:var(--mist);text-underline-offset:.18em;text-decoration-thickness:1px}
@@ -39,7 +39,7 @@ h1{font-weight:300;font-size:clamp(3rem,9vw,6.2rem);line-height:.98;letter-spaci
 
 /* below the fold the water darkens so text stays easy to read */
 main{position:relative}
-main::before{content:"";position:absolute;inset:-6rem -50vw 0;z-index:-1;pointer-events:none;
+main::before{content:"";position:absolute;inset:-6rem calc(50% - 50vw) 0;z-index:-1;pointer-events:none;
   background:linear-gradient(to bottom,rgba(4,17,31,0),rgba(4,17,31,.78) 7rem,rgba(4,17,31,.86))}
 section{padding-block:3.75rem 0}
 h2{font-weight:400;font-size:1.15rem;color:var(--mist);margin:0 0 .5rem}
@@ -70,7 +70,7 @@ h2{font-weight:400;font-size:1.15rem;color:var(--mist);margin:0 0 .5rem}
   .when{padding-top:0}
 }
 footer{position:relative;padding-block:4.5rem 3rem;color:var(--mist);font-size:1rem}
-footer::before{content:"";position:absolute;inset:0 -50vw;z-index:-1;background:rgba(4,17,31,.86)}
+footer::before{content:"";position:absolute;inset:0 calc(50% - 50vw);z-index:-1;background:rgba(4,17,31,.86)}
 .pause{position:fixed;right:1rem;bottom:1rem;z-index:2;font:inherit;font-size:.9rem;color:var(--mist);
   background:rgba(4,17,31,.55);border:1px solid var(--line-2);border-radius:999px;padding:.35rem .85rem;cursor:pointer;backdrop-filter:blur(6px)}
 .pause:hover{color:var(--foam);border-color:var(--mist)}
@@ -218,12 +218,10 @@ if(touch){const h=document.getElementById('hint');if(h)h.textContent='Touch the 
 
 /* muted species colours: [back, flank, glint] */
 const SPECIES=[
-  {back:[38,78,86], body:[92,150,152], glint:[198,232,224]},  // dusty teal
-  {back:[92,72,40], body:[178,146,92], glint:[242,222,170]},  // soft gold
-  {back:[86,54,54], body:[162,114,108],glint:[232,198,186]},  // faded coral
-  {back:[44,62,92], body:[126,154,186],glint:[222,236,250]},  // blue-silver
-  {back:[56,74,50], body:[128,156,114],glint:[210,230,192]},  // sage
-  {back:[64,52,92], body:[138,120,176],glint:[216,204,240]},  // lavender
+  {back:[34,58,80], body:[146,174,196],glint:[230,242,250]},  // blue-silver
+  {back:[30,66,74], body:[118,160,162],glint:[214,238,234]},  // steel teal
+  {back:[66,62,44], body:[168,158,122],glint:[238,230,198]},  // pale gold
+  {back:[44,52,70], body:[128,140,162],glint:[222,228,240]},  // slate
 ];
 const LAYERS=[ // far .. near, then foreground bokeh
   {len:7,  speed:.62, par:.7,  fog:.62, alpha:.75},
@@ -267,14 +265,11 @@ function populate(){
     const cx=rnd(W*.1,W*.9),cy=rnd(H*.15,H*.85),a=rnd(0,6.28);
     for(let i=0;i<n;i++)fish.push(makeFish(sp,layer,cx+rnd(-90,90),cy+rnd(-60,60),a));
   }
-  // a few big, out-of-focus fish drifting right in front of the camera
-  const nb=W<700?1:2;
-  for(let i=0;i<nb;i++)fish.push(makeFish(i%SPECIES.length,3,rnd(0,W),rnd(H*.1,H*.9),Math.random()<.5?0:Math.PI));
 }
 function makeFish(sp,layer,x,y,a){
-  const Ly=LAYERS[layer],s=Ly.speed*rnd(.9,1.1);
-  return{x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,sp,layer,len:Ly.len*rnd(.85,1.15),base:s,max:s*2.1,
-    phase:rnd(0,6.28),flash:0,w:rnd(.85,1.1)};
+  const Ly=LAYERS[layer],s=Ly.speed*rnd(.8,1.2);
+  return{x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,sp,layer,len:Ly.len*rnd(.75,1.25),base:s,max:s*2.1,
+    phase:rnd(0,6.28),flash:0,w:rnd(.85,1.1),ps:rnd(.6,1.7),wd:rnd(0,6.28)};
 }
 function makeSnow(){const d=Math.random();return{x:rnd(0,W),y:rnd(0,H),r:.4+d*d*2.2,s:rnd(.04,.16)*(.5+d),w:rnd(0,6.28),d}}
 
@@ -291,13 +286,13 @@ function step(dt,t){
       f.vy+=Math.sin(t*.0003+f.phase)*.002*dt;
     } else {
       const cx=(f.x/CELL)|0,cy=(f.y/CELL)|0;
-      let n=0,cxs=0,cys=0,vxs=0,vys=0,sx=0,sy=0;
+      let n=0,cxs=0,cys=0,vxs=0,vys=0,sx=0,sy=0;const hs=Math.hypot(f.vx,f.vy)||1,hx=f.vx/hs,hy=f.vy/hs;
       for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++){const c=grid.get((cx+dx)+','+(cy+dy)+','+f.layer);if(!c)continue;
         for(const o of c){if(o===f)continue;const ox=o.x-f.x,oy=o.y-f.y,d2=ox*ox+oy*oy;if(d2>4900)continue;
-          const sep=f.len*1.55;if(d2<sep*sep&&d2>.01){const d=Math.sqrt(d2);sx-=ox/d*(sep-d)/sep;sy-=oy/d*(sep-d)/sep}
+          const sep=f.len*1.25*f.ps,al=ox*hx+oy*hy,la=oy*hx-ox*hy,de=Math.sqrt(al*al*2+la*la);if(de<sep&&d2>.01){const d=Math.sqrt(d2);sx-=ox/d*(sep-de)/sep;sy-=oy/d*(sep-de)/sep}
           if(o.sp===f.sp){n++;cxs+=o.x;cys+=o.y;vxs+=o.vx;vys+=o.vy}}}
-      if(n){ax+=(vxs/n-f.vx)*.07;ay+=(vys/n-f.vy)*.07;ax+=(cxs/n-f.x)*.0014;ay+=(cys/n-f.y)*.0014}
-      ax+=sx*.2;ay+=sy*.2;ax+=(Math.random()-.5)*.03;ay+=(Math.random()-.5)*.03;
+      if(n){ax+=(vxs/n-f.vx)*.055;ay+=(vys/n-f.vy)*.055;ax+=(cxs/n-f.x)*.0007;ay+=(cys/n-f.y)*.0007}
+      ax+=sx*.12;ay+=sy*.12;f.wd+=(Math.random()-.5)*.25*dt;ax+=(Math.random()-.5)*.04+Math.cos(f.wd)*.012;ay+=(Math.random()-.5)*.04+Math.sin(f.wd)*.012;
       // each species follows its own slow current, so schools cross and part
       const ph=f.sp*1.7+f.layer;
       const tx=W*(.5+.36*Math.cos(t*.00005+ph)),ty=H*(.5+.3*Math.sin(t*.00007+ph*1.3));
@@ -330,11 +325,13 @@ const TEX=256,texC=document.createElement('canvas');texC.width=texC.height=TEX;
   let seed=7;const r=()=>(seed=(seed*16807)%2147483647)/2147483647;
   for(let i=0;i<34;i++)pts.push([r()*TEX,r()*TEX]);
   for(let y=0;y<TEX;y++)for(let X=0;X<TEX;X++){
-    let f1=1e9,f2=1e9;
+    let f1=1e9,f2=1e9;const P2=Math.PI*2/TEX;
+    // warp the lookup with whole-period sines so cell edges curve but the tile still repeats
+    const wx=X+7*Math.sin(P2*2*y+.7)+3.5*Math.sin(P2*5*(X+y)),wy=y+7*Math.sin(P2*2*X+2.1)+3.5*Math.sin(P2*4*(X-y));
     for(const p of pts)for(let oy=-1;oy<=1;oy++)for(let ox=-1;ox<=1;ox++){
-      const dx=X-(p[0]+ox*TEX),dy=y-(p[1]+oy*TEX),dd=dx*dx+dy*dy;
+      const dx=wx-(p[0]+ox*TEX),dy=wy-(p[1]+oy*TEX),dd=dx*dx+dy*dy;
       if(dd<f1){f2=f1;f1=dd}else if(dd<f2)f2=dd}
-    const e=Math.sqrt(f2)-Math.sqrt(f1);let v=Math.max(0,1-e/4.5);v=v*v*(3-2*v);v=Math.pow(v,2.2);
+    const e=Math.sqrt(f2)-Math.sqrt(f1);let v=Math.max(0,1-e/7);v=v*v*(3-2*v);v=Math.pow(v,1.7);
     const o=(y*TEX+X)*4;d[o]=200;d[o+1]=240;d[o+2]=255;d[o+3]=v*255;
   }
   x.putImageData(img,0,0);
@@ -389,7 +386,7 @@ function paintCaustics(t){
   const w=caC.width,h=caC.height;caX.globalCompositeOperation='source-over';caX.clearRect(0,0,w,h);
   if(!pat)pat=caX.createPattern(texC,'repeat');
   caX.globalCompositeOperation='lighter';
-  const layers=[[.62,t*.0036,t*.0017,.24],[.86,-t*.0027,t*.003,.19],[.47,t*.0011,-t*.0024,.13]];
+  const layers=[[.62,t*.0036,t*.0017,.15],[.86,-t*.0027,t*.003,.12],[.47,t*.0011,-t*.0024,.08]];
   for(const [sc,ox,oy,al] of layers){const m=new DOMMatrix([sc,0,0,sc*.62,ox,oy]);pat.setTransform(m);caX.globalAlpha=al;caX.fillStyle=pat;caX.fillRect(0,0,w,h)}
   caX.globalAlpha=1;caX.globalCompositeOperation='destination-in';
   const fg=caX.createLinearGradient(0,0,0,h);fg.addColorStop(0,'rgba(0,0,0,.6)');fg.addColorStop(.3,'rgba(0,0,0,.22)');fg.addColorStop(.7,'rgba(0,0,0,.04)');fg.addColorStop(1,'rgba(0,0,0,0)');
