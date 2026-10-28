@@ -5,10 +5,56 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>William Toner</title>
 <meta name="description" content="William Toner, machine learning researcher at Sakana AI in Tokyo. Papers on time series forecasting, efficient LLM inference and noisy labels, plus side projects.">
+<meta name="author" content="William Toner">
 <meta name="theme-color" content="#0C3452">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://williamtoner.net/">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2306213A'/%3E%3Cpath d='M4.5 16C9 9.5 17 9.5 22 16 17 22.5 9 22.5 4.5 16Z' fill='%239DB8CB'/%3E%3Cpath d='M21 16l6.5-5.5v11Z' fill='%239DB8CB'/%3E%3Ccircle cx='9.5' cy='15' r='1.4' fill='%2306213A'/%3E%3C/svg%3E">
+<!-- TODO: add a PNG apple-touch-icon (180x180) for iOS home screens, e.g. <link rel="apple-touch-icon" href="/apple-touch-icon.png"> -->
+
+<!-- sharing previews -->
+<meta property="og:type" content="profile">
+<meta property="og:site_name" content="William Toner">
+<meta property="og:title" content="William Toner">
+<meta property="og:description" content="Machine learning researcher at Sakana AI in Tokyo. Papers on time series forecasting, efficient LLM inference and noisy labels, plus side projects.">
+<meta property="og:url" content="https://williamtoner.net/">
+<meta property="profile:first_name" content="William">
+<meta property="profile:last_name" content="Toner">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="William Toner">
+<meta name="twitter:description" content="Machine learning researcher at Sakana AI in Tokyo. Papers on time series forecasting, efficient LLM inference and noisy labels, plus side projects.">
+<!-- TODO: add a 1200x630 preview image (e.g. a screenshot of the fish) and reference it here:
+<meta property="og:image" content="https://williamtoner.net/og.png">
+<meta property="og:image:alt" content="...">
+and switch twitter:card to "summary_large_image". -->
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "William Toner",
+  "url": "https://williamtoner.net/",
+  "jobTitle": "Machine learning researcher",
+  "worksFor": {"@type": "Organization", "name": "Sakana AI", "url": "https://sakana.ai"},
+  "alumniOf": [
+    {"@type": "CollegeOrUniversity", "name": "University of Edinburgh"},
+    {"@type": "CollegeOrUniversity", "name": "University of Warwick"}
+  ],
+  "knowsAbout": ["Time series forecasting", "Efficient LLM inference", "Learning from noisy labels"],
+  "sameAs": [
+    "https://scholar.google.com/citations?user=IT6-kcAAAAAJ",
+    "https://github.com/williamtoner",
+    "https://github.com/WToner",
+    "https://www.linkedin.com/in/william-toner-ml"
+  ]
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&display=swap" rel="stylesheet">
+<!-- fonts load without blocking first paint; Georgia / Menlo stand in until they arrive -->
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&display=swap" rel="stylesheet"></noscript>
 <style>
 :root{
   --deep:#04111F; --sea:#06213A; --shallow:#0E4A6E;
@@ -20,7 +66,9 @@
 *{box-sizing:border-box}
 html{background:var(--deep);color:var(--foam);-webkit-text-size-adjust:100%}
 body{margin:0;overflow-x:clip;font-family:var(--serif);font-size:1.15rem;line-height:1.6;background:var(--deep)}
-#sea{position:fixed;inset:0;width:100vw;height:100vh;display:block;z-index:0}
+/* 100% wide (not 100vw) so a desktop scrollbar can't cause sideways scroll; 100vh stays put
+   while mobile URL bars show and hide, so the canvas isn't resized mid-scroll */
+#sea{position:fixed;top:0;left:0;width:100%;height:100vh;display:block;z-index:0}
 .page{position:relative;z-index:1}
 a{color:var(--foam);text-decoration-color:var(--mist);text-underline-offset:.18em;text-decoration-thickness:1px}
 a:hover{text-decoration-color:var(--glint)}
@@ -28,21 +76,26 @@ a:hover{text-decoration-color:var(--glint)}
 .wrap{max-width:46rem;margin:0 auto;padding-inline:1.25rem}
 
 /* hero: the water gets the whole first screen */
-header{min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding-block:6rem 4.5rem;text-shadow:0 1px 18px rgba(4,17,31,.9)}
+header{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding-block:6rem 4.5rem;
+  text-shadow:0 0 .3em rgba(4,17,31,.85),0 1px 18px rgba(4,17,31,.9)}
+/* a soft dark wash behind the text so passing fish never wash it out; it hands over seamlessly to main::before */
+header::before{content:"";position:absolute;inset:0 calc(50% - 50vw);z-index:-1;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(4,17,31,0) 25%,rgba(4,17,31,.5) 55%,rgba(4,17,31,.72) 80%,rgba(4,17,31,.78))}
 h1{font-weight:300;font-size:clamp(3rem,9vw,6.2rem);line-height:.98;letter-spacing:-.025em;margin:0 0 1.4rem}
 .intro{font-size:1.3rem;line-height:1.5;max-width:36rem;margin:0}
 .intro a{text-decoration-color:var(--line-2)}
 .links{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;margin:1.6rem 0 0;padding:0;list-style:none;font-size:1.05rem}
 .links a{color:var(--mist);text-decoration:none;border-bottom:1px solid var(--line-2);padding-bottom:1px}
 .links a:hover{color:var(--foam);border-bottom-color:var(--foam)}
-.hint{margin:2.6rem 0 0;font-size:.95rem;color:var(--mist);opacity:.75;font-style:italic}
+.hint{margin:2.6rem 0 0;font-size:.95rem;color:var(--mist);font-style:italic}
 
 /* below the fold the water darkens so text stays easy to read */
 main{position:relative}
-main::before{content:"";position:absolute;inset:-6rem calc(50% - 50vw) 0;z-index:-1;pointer-events:none;
-  background:linear-gradient(to bottom,rgba(4,17,31,0),rgba(4,17,31,.78) 7rem,rgba(4,17,31,.86))}
+main::before{content:"";position:absolute;inset:0 calc(50% - 50vw);z-index:-1;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(4,17,31,.78),rgba(4,17,31,.86) 10rem)}
 section{padding-block:3.75rem 0}
 h2{font-weight:400;font-size:1.15rem;color:var(--mist);margin:0 0 .5rem}
+.pages{margin-top:.75rem}
 
 .list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
 .list > li{border-bottom:1px solid var(--line)}
@@ -72,24 +125,28 @@ h2{font-weight:400;font-size:1.15rem;color:var(--mist);margin:0 0 .5rem}
 footer{position:relative;padding-block:4.5rem 3rem;color:var(--mist);font-size:1rem}
 footer::before{content:"";position:absolute;inset:0 calc(50% - 50vw);z-index:-1;background:rgba(4,17,31,.86)}
 .pause{position:fixed;right:1rem;bottom:1rem;z-index:2;font:inherit;font-size:.9rem;color:var(--mist);
-  background:rgba(4,17,31,.55);border:1px solid var(--line-2);border-radius:999px;padding:.35rem .85rem;cursor:pointer;backdrop-filter:blur(6px)}
+  background:rgba(4,17,31,.82);border:1px solid var(--line-2);border-radius:999px;padding:.35rem .85rem;cursor:pointer;backdrop-filter:blur(6px)}
 .pause:hover{color:var(--foam);border-color:var(--mist)}
 @media (prefers-reduced-motion:reduce){.feature .mark{transition:none}}
 </style>
 </head>
 <body>
 <canvas id="sea" aria-hidden="true"></canvas>
+<!-- first in tab order so keyboard users can stop the animation straight away -->
+<button class="pause" id="pause" type="button">Pause fish</button>
 <div class="page">
 <header class="wrap">
   <h1>William Toner</h1>
   <p class="intro">I'm a machine learning researcher at <a href="https://sakana.ai">Sakana AI</a> in Tokyo. Before that I spent two years at Huawei working on efficient LLM inference, after a PhD at the University of Edinburgh. I've written about time series forecasting, faster language models and learning from noisy labels. In my spare time I like computational puzzles.</p>
-  <ul class="links" aria-label="Elsewhere">
+  <nav aria-label="Elsewhere">
+  <ul class="links">
     <li><a href="https://scholar.google.com/citations?user=IT6-kcAAAAAJ&amp;hl=en">Google Scholar</a></li>
     <li><a href="https://github.com/williamtoner">GitHub</a></li>
     <li><a href="https://www.linkedin.com/in/william-toner-ml">LinkedIn</a></li>
     <li><a href="https://github.com/WToner">Personal GitHub</a></li>
     <!-- EDIT ME: add more, e.g. <li><a href="mailto:you@example.com">Email</a></li> -->
   </ul>
+  </nav>
   <p class="hint" id="hint">Move through the water. Click to scatter the school.</p>
 </header>
 
@@ -102,51 +159,51 @@ footer::before{content:"";position:absolute;inset:0 calc(50% - 50vw);z-index:-1;
       <!-- ICLR submission: once it's on arXiv, add it here.
       <li class="row">
         <span class="when">2026</span>
-        <p class="title"><a href="https://arxiv.org/abs/XXXX.XXXXX">TITLE</a></p>
+        <h3 class="title"><a href="https://arxiv.org/abs/XXXX.XXXXX">TITLE</a></h3>
         <p class="meta"><b>William Toner</b>, ... <i>Under review.</i></p>
       </li>
       -->
       <li class="row">
         <span class="when">2026</span>
-        <p class="title"><a href="https://arxiv.org/abs/2607.01831">Lynx: Progressive Speculative Quantization for Accelerating KV Transfer in Long-Context Inference</a></p>
+        <h3 class="title"><a href="https://arxiv.org/abs/2607.01831">Lynx: Progressive Speculative Quantization for Accelerating KV Transfer in Long-Context Inference</a></h3>
         <p class="meta">W. Han, G. M. Yeung, M. Barletta, <b>William Toner</b>, A. Hoste, A. Barker. <i>arXiv preprint.</i></p>
       </li>
       <li class="row">
         <span class="when">2025</span>
-        <p class="title"><a href="https://proceedings.mlr.press/v267/lee25ag.html">Lightweight Online Adaption for Time Series Foundation Model Forecasts</a></p>
-        <p class="meta"><b>William Toner</b>, T. L. Lee, R. Singh, A. Joosen, M. Asenov. <i>ICML 2025.</i></p>
+        <h3 class="title"><a href="https://proceedings.mlr.press/v267/lee25ag.html">Lightweight Online Adaption for Time Series Foundation Model Forecasts</a></h3>
+        <p class="meta">T. L. Lee, <b>William Toner</b>, R. Singh, A. Joosen, M. Asenov. <i>ICML 2025.</i></p>
         <p class="more"><a href="https://arxiv.org/abs/2502.12920">arXiv version</a></p>
       </li>
       <li class="row">
         <span class="when">2025</span>
-        <p class="title"><a href="https://icml.cc/virtual/2025/47843">Higher Acceptance Rates for Speculative Decoding with Randomised Drafting</a></p>
+        <h3 class="title"><a href="https://icml.cc/virtual/2025/47843">Higher Acceptance Rates for Speculative Decoding with Randomised Drafting</a></h3>
         <p class="meta"><b>William Toner</b>, M. Asenov, R. Singh, A. Joosen. <i>ICML 2025 workshop: Tiny Titans.</i></p>
       </li>
       <li class="row">
         <span class="when">2025</span>
-        <p class="title"><a href="https://proceedings.mlr.press/v296/toner25a.html">Performance of Zero-Shot Time Series Foundation Models on Cloud Data</a></p>
+        <h3 class="title"><a href="https://proceedings.mlr.press/v296/toner25a.html">Performance of Zero-Shot Time Series Foundation Models on Cloud Data</a></h3>
         <p class="meta"><b>William Toner</b>, T. L. Lee, A. Joosen, R. Singh, M. Asenov. <i>ICLR 2025 workshop: I Can't Believe It's Not Better (PMLR).</i></p>
         <p class="more"><a href="https://arxiv.org/abs/2502.12944">arXiv version</a></p>
       </li>
-            <li class="row">
+      <li class="row">
         <span class="when">2025</span>
-        <p class="title">Robust Loss Functions for Machine Learning in the Presence of Noisy Labels</p>
+        <h3 class="title">Robust Loss Functions for Machine Learning in the Presence of Noisy Labels</h3>
         <p class="meta"><b>William Toner</b>. <i>PhD thesis, University of Edinburgh.</i></p>
       </li>
       <li class="row">
         <span class="when">2024</span>
-        <p class="title"><a href="https://proceedings.mlr.press/v235/toner24a.html">An Analysis of Linear Time Series Forecasting Models</a></p>
+        <h3 class="title"><a href="https://proceedings.mlr.press/v235/toner24a.html">An Analysis of Linear Time Series Forecasting Models</a></h3>
         <p class="meta"><b>William Toner</b>, L. Darlow. <i>ICML 2024.</i></p>
         <p class="more"><a href="https://arxiv.org/abs/2403.14587">arXiv version</a></p>
       </li>
       <li class="row">
         <span class="when">2024</span>
-        <p class="title"><a href="https://arxiv.org/abs/2409.06830">Noisy Early Stopping for Noisy Labels</a></p>
+        <h3 class="title"><a href="https://arxiv.org/abs/2409.06830">Noisy Early Stopping for Noisy Labels</a></h3>
         <p class="meta"><b>William Toner</b>, A. Storkey. <i>arXiv preprint.</i></p>
       </li>
       <li class="row">
         <span class="when">2023</span>
-        <p class="title"><a href="https://arxiv.org/abs/2307.13100">Label Noise: Correcting the Forward-Correction</a></p>
+        <h3 class="title"><a href="https://arxiv.org/abs/2307.13100">Label Noise: Correcting the Forward-Correction</a></h3>
         <p class="meta"><b>William Toner</b>, A. Storkey. <i>arXiv preprint.</i> An earlier version appeared at the ICML 2023 AdvML-Frontiers workshop.</p>
         <p class="more"><a href="https://openreview.net/forum?id=FenYb7HXSy">Workshop version on OpenReview</a></p>
       </li>
@@ -160,24 +217,24 @@ footer::before{content:"";position:absolute;inset:0 calc(50% - 50vw);z-index:-1;
       <!-- TO ADD A PROJECT: copy a <li> ... </li> block, paste it at the top, and edit it. -->
       <li class="row feature">
         <span class="when">Oct 2026</span>
-        <p class="title"><a href="/SnakeBox/">A record snake in the 13-dimensional cube</a></p>
+        <h3 class="title"><a href="/SnakeBox/">A record snake in the 13-dimensional cube</a></h3>
         <p class="what">A snake-in-the-box of 2946 edges in thirteen dimensions, improving on the previous best of 2938. Watch it draw itself, or verify it in your browser.</p>
         <span class="mark" aria-hidden="true"></span>
       </li>
       <li class="row">
         <span class="when">Sep 2026</span>
-        <p class="title"><a href="/Kanjr/app/#/">Kanjr, a kanji learning app</a></p>
+        <h3 class="title"><a href="/Kanjr/app/#/">Kanjr, a kanji learning app</a></h3>
         <p class="what">A spaced-repetition web app for learning the meanings of all 2,136 jōyō kanji, each taught after the parts it's built from, with mnemonics. I use it on my iPhone.</p>
         <p class="more"><a href="https://github.com/williamtoner/Kanjr">Source on GitHub</a></p>
       </li>
       <li class="row">
         <span class="when">Apr 2026</span>
-        <p class="title"><a href="https://oeis.org/A029495">A new term of OEIS A029495</a></p>
+        <h3 class="title"><a href="https://oeis.org/A029495">A new term of OEIS A029495</a></h3>
         <p class="what">Numbers <i>k</i> that divide the reversed binary concatenation of 1 to <i>k</i>. The first three terms, 1, 5 and 337, had stood alone; a parallel GPU search found the fourth, 58088321, and showed there are no others below 10<sup>8</sup>.</p>
       </li>
       <li class="row">
         <span class="when">Earlier</span>
-        <p class="title"><a href="https://github.com/WToner/Wordle">A Wordle solver</a></p>
+        <h3 class="title"><a href="https://github.com/WToner/Wordle">A Wordle solver</a></h3>
         <p class="what">Designing an AI that solves Wordle in as few guesses as possible.</p>
       </li>
     </ul>
@@ -185,7 +242,7 @@ footer::before{content:"";position:absolute;inset:0 calc(50% - 50vw);z-index:-1;
 
   <section aria-labelledby="pages">
     <h2 id="pages">Other pages</h2>
-    <ul class="links" style="margin-top:.75rem">
+    <ul class="links pages">
       <!-- TO ADD A PAGE: copy an <li> ... </li> line and edit it. -->
       <li><a href="/DecodeAtlas/">How LLMs are split across GPUs</a></li>
     </ul>
@@ -193,6 +250,7 @@ footer::before{content:"";position:absolute;inset:0 calc(50% - 50vw);z-index:-1;
 
   <section aria-labelledby="background">
     <h2 id="background">Background</h2>
+    <!-- TODO: the PhD and MMath rows show a label rather than years; add years if you want them to match the rows above. -->
     <ul class="cv">
       <li><span class="when">Now</span><span class="what">Machine learning researcher, Sakana AI, Tokyo</span></li>
       <li><span class="when">2024–26</span><span class="what">Researcher, Huawei <span>efficient LLM inference</span></span></li>
@@ -208,13 +266,13 @@ footer::before{content:"";position:absolute;inset:0 calc(50% - 50vw);z-index:-1;
   William Toner, 2026. This site lives on <a href="https://github.com/williamtoner/williamtoner.github.io">GitHub</a>.
 </footer>
 </div>
-<button class="pause" id="pause" type="button" aria-pressed="false">Pause fish</button>
 <script>
 (()=>{
 const cv=document.getElementById('sea'),ctx=cv.getContext('2d',{alpha:false});
-const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const motionQ=matchMedia('(prefers-reduced-motion: reduce)'),reduce=motionQ.matches;
 const touch=matchMedia('(hover: none)').matches;
-if(touch){const h=document.getElementById('hint');if(h)h.textContent='Touch the water. Tap to scatter the school.'}
+const hint=document.getElementById('hint');
+if(touch&&hint)hint.textContent='Touch the water. Tap to scatter the school.';
 
 /* muted species colours: [back, flank, glint] */
 const SPECIES=[
@@ -236,24 +294,31 @@ let running=!reduce,last=performance.now(),req=0,frameNo=0;
 // offscreen layers: far fish are drawn small and scaled up (soft focus); bokeh even softer
 const farC=document.createElement('canvas'),farX=farC.getContext('2d');
 const bokC=document.createElement('canvas'),bokX=bokC.getContext('2d');
-const cauC=document.createElement('canvas'),cauX=cauC.getContext('2d');
-let cauImg=null,CW=0,CH=0;
 
 function rnd(a,b){return a+Math.random()*(b-a)}
+// canvas sizes never hit 0: drawImage throws on an empty canvas, which would stop the animation for good
+function px(v){return Math.max(1,Math.round(v))}
 function mix(a,b,t){return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t]}
 function rgb(c,a){return a===undefined?`rgb(${c[0]|0},${c[1]|0},${c[2]|0})`:`rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`}
 // water colour at a given height, used to fade distant fish into the haze
 const WATER=[[30,104,134],[18,74,104],[11,48,76],[6,27,47],[3,12,23]];
 function waterAt(y){const u=Math.max(0,Math.min(.999,y/H))*(WATER.length-1),i=u|0;return mix(WATER[i],WATER[i+1],u-i)}
 
+// returns true when the fish were re-created (so the caller can let them settle into schools)
 function resize(){
-  DPR=Math.min(2,window.devicePixelRatio||1);W=innerWidth;H=innerHeight;
-  cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0);
-  farC.width=Math.round(W*.5);farC.height=Math.round(H*.5);
-  bokC.width=Math.round(W/6);bokC.height=Math.round(H/6);
-  
-  paintStatic();populate();
+  const dpr=Math.min(2,window.devicePixelRatio||1),w=cv.clientWidth||innerWidth,h=cv.clientHeight||innerHeight;
+  if(w===W&&h===H&&dpr===DPR)return false;
+  const pw=W,ph=H;DPR=dpr;W=w;H=h;
+  cv.width=px(W*DPR);cv.height=px(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0);
+  farC.width=px(W*.5);farC.height=px(H*.5);
+  bokC.width=px(W/6);bokC.height=px(H/6);
+  paintStatic();
+  // a height-only change keeps the same fish, just stretched to fit, instead of restarting the scene
+  const fresh=!fish.length||W!==pw;
+  if(fresh)populate();else if(H!==ph)for(const f of fish)f.y*=H/ph;
   const ns=Math.round(W*H/7000);while(snow.length<ns)snow.push(makeSnow());snow.length=ns;
+  if(!fresh)for(const s of snow)if(s.y>H)s.y=rnd(0,H);
+  return fresh;
 }
 function populate(){
   fish=[];
@@ -337,22 +402,21 @@ const TEX=256,texC=document.createElement('canvas');texC.width=texC.height=TEX;
   x.putImageData(img,0,0);
 })();
 let pat=null;
-function caustics(){}
 const bgC=document.createElement('canvas'),bgX=bgC.getContext('2d');
 const vgC=document.createElement('canvas'),vgX=vgC.getContext('2d');
 const ltC=document.createElement('canvas'),ltX=ltC.getContext('2d');
 const bdC=document.createElement('canvas'),bdX=bdC.getContext('2d');
 function paintStatic(){
-  bgC.width=Math.round(W/2);bgC.height=Math.round(H/2);const w=bgC.width,h=bgC.height;
+  bgC.width=px(W/2);bgC.height=px(H/2);const w=bgC.width,h=bgC.height;
   const g=bgX.createLinearGradient(0,0,0,h);
   g.addColorStop(0,rgb(WATER[0]));g.addColorStop(.22,rgb(WATER[1]));g.addColorStop(.5,rgb(WATER[2]));g.addColorStop(.78,rgb(WATER[3]));g.addColorStop(1,rgb(WATER[4]));
   bgX.fillStyle=g;bgX.fillRect(0,0,w,h);
-  vgC.width=Math.round(W/2);vgC.height=Math.round(H/2);
+  vgC.width=px(W/2);vgC.height=px(H/2);
   const v=vgX.createRadialGradient(vgC.width*.5,vgC.height*.42,Math.min(vgC.width,vgC.height)*.3,vgC.width*.5,vgC.height*.5,Math.max(vgC.width,vgC.height)*.78);
   v.addColorStop(0,'rgba(2,8,16,0)');v.addColorStop(1,'rgba(2,8,16,.6)');vgX.fillStyle=v;vgX.fillRect(0,0,vgC.width,vgC.height);
-  ltC.width=Math.round(W/4);ltC.height=Math.round(H/4);
-  bdC.width=Math.round(W/2);bdC.height=Math.round(H/2);
-  caC.width=Math.round(W/2);caC.height=Math.round(H*.55/2);
+  ltC.width=px(W/4);ltC.height=px(H/4);
+  bdC.width=px(W/2);bdC.height=px(H/2);
+  caC.width=px(W/2);caC.height=px(H*.55/2);
 }
 function paintBackdrop(t){
   paintLight(t);const w=bdC.width,h=bdC.height;
@@ -461,15 +525,24 @@ function frame(now){
 function start(){if(!running){running=true;last=performance.now();req=requestAnimationFrame(frame)}}
 function stop(){running=false;cancelAnimationFrame(req)}
 
-addEventListener('resize',()=>{resize();for(let i=0;i<200;i++)step(1,performance.now()+i*16);if(!running)frame(performance.now())});
+// debounced: mobile browsers fire resize repeatedly while the URL bar slides; most of those
+// don't change the canvas (it's 100vh) and resize() returns early
+let rz=0;
+addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{
+  if(resize())for(let i=0;i<200;i++)step(1,performance.now()+i*16);
+  if(!running)frame(performance.now())},120)});
 addEventListener('pointermove',e=>{ptr.x=e.clientX;ptr.y=e.clientY;ptr.active=true;ptr.last=performance.now()},{passive:true});
 document.addEventListener('mouseleave',()=>{ptr.active=false});
-addEventListener('pointerdown',e=>{if(e.target.closest('a,button,input,textarea'))return;ripples.push({x:e.clientX,y:e.clientY,r:4,p:1});ptr.last=performance.now()},{passive:true});
+addEventListener('pointerdown',e=>{if(!running||e.target.closest('a,button,input,textarea'))return;ripples.push({x:e.clientX,y:e.clientY,r:4,p:1});ptr.last=performance.now()},{passive:true});
 let paused=reduce;
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();else if(!paused)start()});
 const btn=document.getElementById('pause');
-function syncBtn(){btn.textContent=paused?'Play fish':'Pause fish';btn.setAttribute('aria-pressed',String(paused))}
-btn.addEventListener('click',()=>{paused=!paused;syncBtn();if(paused)stop();else start()});
+// the label says what the button will do, so no aria-pressed (which would contradict a changing label)
+function syncBtn(){btn.textContent=paused?'Play fish':'Pause fish';if(hint)hint.hidden=paused}
+function setPaused(p){paused=p;syncBtn();if(paused)stop();else if(!document.hidden)start()}
+btn.addEventListener('click',()=>setPaused(!paused));
+// follow the OS setting if it changes while the page is open
+motionQ.addEventListener?.('change',e=>setPaused(e.matches));
 syncBtn();
 
 resize();
