@@ -215,6 +215,23 @@ footer::before{content:"";position:absolute;inset:0 calc(50% - 50vw);z-index:-1;
     <h2 id="projects">Side projects</h2>
     <ul class="list">
       <!-- TO ADD A PROJECT: copy a <li> ... </li> block, paste it at the top, and edit it. -->
+      <li class="row">
+        <span class="when">Nov 2026</span>
+        <h3 class="title"><a href="/quokka-blocker/">Quokka Blocker</a></h3>
+        <p class="what">A browser extension that swaps the adverts on a page for photographs and short films of quokkas, otters, red pandas and friends, cropped so no face is lost. Nothing leaves your browser.</p>
+        <p class="more"><a href="https://chromewebstore.google.com/detail/quokka-blocker/oijplamlmgignkmolbmaingkcolmgiln">Chrome Web Store</a> · <a href="https://github.com/williamtoner/quokka-blocker">Source on GitHub</a></p>
+      </li>
+      <li class="row">
+        <span class="when">Nov 2026</span>
+        <h3 class="title"><a href="/antivertising/">Antivertising</a></h3>
+        <p class="what">A browser extension that doesn't block ads. It replaces each one with an ad for the advertiser's rival, so a Pepsi ad becomes a Coke ad. It knows about 14,000 brands.</p>
+        <p class="more"><a href="https://github.com/williamtoner/antivertising">Source on GitHub</a></p>
+      </li>
+      <li class="row">
+        <span class="when">Oct 2026</span>
+        <h3 class="title"><a href="https://doi.org/10.5281/zenodo.23552885">Seventeen lonely runners, assuming sixteen</a></h3>
+        <p class="what">A computer-assisted proof of the Lonely Runner Conjecture for seventeen runners, assuming the sixteen-runner case from Allikvere's recent preprint. It carries his method one case further, closing 91 prime gates with a GPU search. Not yet refereed; the code and certificates are on Zenodo.</p>
+      </li>
       <li class="row feature">
         <span class="when">Oct 2026</span>
         <h3 class="title"><a href="/SnakeBox/">A record snake in the 13-dimensional cube</a></h3>
@@ -278,7 +295,6 @@ if(touch&&hint)hint.textContent='Touch the water. Tap to scatter the school.';
 const SPECIES=[
   {back:[34,58,80], body:[146,174,196],glint:[230,242,250]},  // blue-silver
   {back:[30,66,74], body:[118,160,162],glint:[214,238,234]},  // steel teal
-  {back:[66,62,44], body:[168,158,122],glint:[238,230,198]},  // pale gold
   {back:[44,52,70], body:[128,140,162],glint:[222,228,240]},  // slate
 ];
 const LAYERS=[ // far .. near, then foreground bokeh
@@ -316,14 +332,14 @@ function resize(){
   // a height-only change keeps the same fish, just stretched to fit, instead of restarting the scene
   const fresh=!fish.length||W!==pw;
   if(fresh)populate();else if(H!==ph)for(const f of fish)f.y*=H/ph;
-  const ns=Math.round(W*H/7000);while(snow.length<ns)snow.push(makeSnow());snow.length=ns;
+  const ns=Math.round(W*H/14000);while(snow.length<ns)snow.push(makeSnow());snow.length=ns;
   if(!fresh)for(const s of snow)if(s.y>H)s.y=rnd(0,H);
   return fresh;
 }
 function populate(){
   fish=[];
-  const total=Math.round(Math.max(140,Math.min(520,W*H/2900)));
-  const nSchools=W<700?4:6;
+  const total=Math.round(Math.max(100,Math.min(340,W*H/4400)));
+  const nSchools=W<700?3:5;
   for(let k=0;k<nSchools;k++){
     const sp=k%SPECIES.length, layer=k%3===0?0:k%3===1?1:2;
     const n=Math.round(total/nSchools*(layer===0?1.3:layer===2?.75:1));
@@ -383,25 +399,6 @@ function step(dt,t){
 }
 
 /* ---------------- water ---------------- */
-// a tileable "light net": bright where two Voronoi cells meet, like sunlight focused by waves
-const TEX=256,texC=document.createElement('canvas');texC.width=texC.height=TEX;
-(function makeCausticTexture(){
-  const x=texC.getContext('2d'),img=x.createImageData(TEX,TEX),d=img.data,pts=[];
-  let seed=7;const r=()=>(seed=(seed*16807)%2147483647)/2147483647;
-  for(let i=0;i<34;i++)pts.push([r()*TEX,r()*TEX]);
-  for(let y=0;y<TEX;y++)for(let X=0;X<TEX;X++){
-    let f1=1e9,f2=1e9;const P2=Math.PI*2/TEX;
-    // warp the lookup with whole-period sines so cell edges curve but the tile still repeats
-    const wx=X+7*Math.sin(P2*2*y+.7)+3.5*Math.sin(P2*5*(X+y)),wy=y+7*Math.sin(P2*2*X+2.1)+3.5*Math.sin(P2*4*(X-y));
-    for(const p of pts)for(let oy=-1;oy<=1;oy++)for(let ox=-1;ox<=1;ox++){
-      const dx=wx-(p[0]+ox*TEX),dy=wy-(p[1]+oy*TEX),dd=dx*dx+dy*dy;
-      if(dd<f1){f2=f1;f1=dd}else if(dd<f2)f2=dd}
-    const e=Math.sqrt(f2)-Math.sqrt(f1);let v=Math.max(0,1-e/7);v=v*v*(3-2*v);v=Math.pow(v,1.7);
-    const o=(y*TEX+X)*4;d[o]=200;d[o+1]=240;d[o+2]=255;d[o+3]=v*255;
-  }
-  x.putImageData(img,0,0);
-})();
-let pat=null;
 const bgC=document.createElement('canvas'),bgX=bgC.getContext('2d');
 const vgC=document.createElement('canvas'),vgX=vgC.getContext('2d');
 const ltC=document.createElement('canvas'),ltX=ltC.getContext('2d');
@@ -416,16 +413,15 @@ function paintStatic(){
   v.addColorStop(0,'rgba(2,8,16,0)');v.addColorStop(1,'rgba(2,8,16,.6)');vgX.fillStyle=v;vgX.fillRect(0,0,vgC.width,vgC.height);
   ltC.width=px(W/4);ltC.height=px(H/4);
   bdC.width=px(W/2);bdC.height=px(H/2);
-  caC.width=px(W/2);caC.height=px(H*.55/2);
 }
 function paintBackdrop(t){
   paintLight(t);const w=bdC.width,h=bdC.height;
   bdX.globalCompositeOperation='source-over';bdX.drawImage(bgC,0,0,w,h);
-  bdX.globalCompositeOperation='lighter';bdX.drawImage(ltC,0,0,w,h);paintCaustics(t);bdX.drawImage(caC,0,0);
+  bdX.globalCompositeOperation='lighter';bdX.drawImage(ltC,0,0,w,h);
   bdX.globalCompositeOperation='source-over';bdX.drawImage(vgC,0,0,w,h);
 }
 function paintLight(t){
-  // sun patch, rays and caustics, all drawn into a quarter-size buffer: soft and cheap
+  // sun patch and a few faint rays, drawn into a quarter-size buffer: soft and cheap
   const w=ltC.width,h=ltC.height,x=ltX;
   x.globalCompositeOperation='source-over';x.clearRect(0,0,w,h);
   const sx=w*(.64+.04*Math.sin(t*.00005)),sy=-h*.08;
@@ -433,28 +429,17 @@ function paintLight(t){
   glow.addColorStop(0,'rgba(170,215,240,.13)');glow.addColorStop(.4,'rgba(100,170,215,.05)');glow.addColorStop(1,'rgba(100,170,215,0)');
   x.fillStyle=glow;x.fillRect(0,0,w,h);
   x.globalCompositeOperation='lighter';
-  const rays=11,len=h*1.15;
+  const rays=7,len=h*1.15;
   for(let i=0;i<rays;i++){
     const base=-.62+i*(1.24/(rays-1)),ang=Math.PI/2+base+Math.sin(t*.00011+i*1.9)*.045;
     const wid=.018+.016*(.5+.5*Math.sin(t*.00023+i*2.7));
-    const a=.06*(.5+.5*Math.sin(t*.00037+i*1.3))*(1-Math.abs(base)*.6);
+    const a=.04*(.5+.5*Math.sin(t*.00037+i*1.3))*(1-Math.abs(base)*.6);
     const ex=sx+Math.cos(ang)*len,ey=sy+Math.sin(ang)*len;
     const rg=x.createLinearGradient(sx,sy,ex,ey);
     rg.addColorStop(0,`rgba(200,242,255,${a})`);rg.addColorStop(.55,`rgba(150,215,245,${a*.4})`);rg.addColorStop(1,'rgba(150,215,245,0)');
     x.fillStyle=rg;x.beginPath();x.moveTo(sx,sy);
     x.lineTo(sx+Math.cos(ang-wid)*len,sy+Math.sin(ang-wid)*len);x.lineTo(sx+Math.cos(ang+wid)*len,sy+Math.sin(ang+wid)*len);x.closePath();x.fill();
   }
-}
-const caC=document.createElement('canvas'),caX=caC.getContext('2d');
-function paintCaustics(t){
-  const w=caC.width,h=caC.height;caX.globalCompositeOperation='source-over';caX.clearRect(0,0,w,h);
-  if(!pat)pat=caX.createPattern(texC,'repeat');
-  caX.globalCompositeOperation='lighter';
-  const layers=[[.62,t*.0036,t*.0017,.15],[.86,-t*.0027,t*.003,.12],[.47,t*.0011,-t*.0024,.08]];
-  for(const [sc,ox,oy,al] of layers){const m=new DOMMatrix([sc,0,0,sc*.62,ox,oy]);pat.setTransform(m);caX.globalAlpha=al;caX.fillStyle=pat;caX.fillRect(0,0,w,h)}
-  caX.globalAlpha=1;caX.globalCompositeOperation='destination-in';
-  const fg=caX.createLinearGradient(0,0,0,h);fg.addColorStop(0,'rgba(0,0,0,.6)');fg.addColorStop(.3,'rgba(0,0,0,.22)');fg.addColorStop(.7,'rgba(0,0,0,.04)');fg.addColorStop(1,'rgba(0,0,0,0)');
-  caX.fillStyle=fg;caX.fillRect(0,0,w,h);caX.globalCompositeOperation='source-over';
 }
 function drawSnow(dt,t){
   for(const s of snow){s.y-=s.s*dt;s.x+=Math.sin(t*.0005+s.w)*.06*dt;if(s.y<-6){s.y=H+6;s.x=rnd(0,W)}
@@ -490,8 +475,6 @@ function drawFish(c,f,scale,detail){
     c.globalAlpha=Ly.alpha*(.25+.75*sh);c.strokeStyle=rgb(glint);c.lineWidth=Math.max(.6,w*.32);c.lineCap='round';
     c.beginPath();c.moveTo(L*.32,-w*.12);c.quadraticCurveTo(0,-w*.1+m,-L*.3,tb*.85);c.stroke();
     c.globalAlpha=Ly.alpha;
-    if(f.layer===2){c.fillStyle='rgba(8,16,24,.85)';c.beginPath();c.arc(L*.34,-w*.22,Math.max(.8,w*.26),0,6.283);c.fill();
-      c.fillStyle='rgba(255,255,255,.7)';c.beginPath();c.arc(L*.345,-w*.3,Math.max(.35,w*.09),0,6.283);c.fill()}
   }
   c.globalAlpha=1;
 }
