@@ -77,7 +77,7 @@ a:hover{text-decoration-color:var(--glint)}
 
 /* hero: the water gets the whole first screen */
 header{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding-block:6rem 4.5rem;
-  text-shadow:0 0 .3em rgba(4,17,31,.85),0 1px 18px rgba(4,17,31,.9)}
+  text-shadow:0 1px 12px rgba(4,17,31,.6)}
 /* a soft dark wash behind the text so passing fish never wash it out; it hands over seamlessly to main::before */
 header::before{content:"";position:absolute;inset:0 calc(50% - 50vw);z-index:-1;pointer-events:none;
   background:linear-gradient(to bottom,rgba(4,17,31,0) 25%,rgba(4,17,31,.5) 55%,rgba(4,17,31,.72) 80%,rgba(4,17,31,.78))}
@@ -87,15 +87,13 @@ h1{font-weight:300;font-size:clamp(3rem,9vw,6.2rem);line-height:.98;letter-spaci
 .links{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;margin:1.6rem 0 0;padding:0;list-style:none;font-size:1.05rem}
 .links a{color:var(--mist);text-decoration:none;border-bottom:1px solid var(--line-2);padding-bottom:1px}
 .links a:hover{color:var(--foam);border-bottom-color:var(--foam)}
-.hint{margin:2.6rem 0 0;font-size:.95rem;color:var(--mist);font-style:italic}
 
-/* below the fold the water darkens so text stays easy to read */
+/* below the fold the water is all but covered: the sea belongs to the hero */
 main{position:relative}
 main::before{content:"";position:absolute;inset:0 calc(50% - 50vw);z-index:-1;pointer-events:none;
-  background:linear-gradient(to bottom,rgba(4,17,31,.78),rgba(4,17,31,.86) 10rem)}
-section{padding-block:3.75rem 0}
-h2{font-weight:400;font-size:1.15rem;color:var(--mist);margin:0 0 .5rem}
-.pages{margin-top:.75rem}
+  background:linear-gradient(to bottom,rgba(4,17,31,.78),rgba(4,17,31,.95) 10rem)}
+section{padding-block:5rem 0}
+h2{font-family:var(--mono);font-weight:400;font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:var(--mist);margin:0 0 .9rem}
 
 .list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
 .list > li{border-bottom:1px solid var(--line)}
@@ -109,9 +107,6 @@ h2{font-weight:400;font-size:1.15rem;color:var(--mist);margin:0 0 .5rem}
 .more{grid-column:2;margin:.2rem 0 0;font-size:1rem}
 .more a{color:var(--mist)}
 .more a:hover{color:var(--foam)}
-.feature .mark{grid-column:2;display:block;height:3px;width:3.2rem;margin-top:.6rem;border-radius:2px;
-  background:linear-gradient(90deg,#6A4CFF,#00B8F0,#3DE6A0,#FFD84D,#FF6A3D);transition:width .25s ease}
-.feature:hover .mark{width:7rem}
 .after{font-size:1rem;color:var(--mist);margin:1rem 0 0}
 .cv{list-style:none;margin:0;padding:0}
 .cv li{display:grid;grid-template-columns:6.5rem 1fr;gap:1.5rem;padding:.55rem 0}
@@ -119,15 +114,21 @@ h2{font-weight:400;font-size:1.15rem;color:var(--mist);margin:0 0 .5rem}
 .cv .what span{color:var(--mist)}
 @media (max-width:560px){
   .row,.cv li{grid-template-columns:1fr;gap:.25rem}
-  .meta,.what,.more,.feature .mark{grid-column:1}
+  .meta,.what,.more{grid-column:1}
   .when{padding-top:0}
+  .intro{font-size:1.15rem}
 }
 footer{position:relative;padding-block:4.5rem 3rem;color:var(--mist);font-size:1rem}
-footer::before{content:"";position:absolute;inset:0 calc(50% - 50vw);z-index:-1;background:rgba(4,17,31,.86)}
+footer::before{content:"";position:absolute;inset:0 calc(50% - 50vw);z-index:-1;background:rgba(4,17,31,.95)}
 .pause{position:fixed;right:1rem;bottom:1rem;z-index:2;font:inherit;font-size:.9rem;color:var(--mist);
-  background:rgba(4,17,31,.82);border:1px solid var(--line-2);border-radius:999px;padding:.35rem .85rem;cursor:pointer;backdrop-filter:blur(6px)}
+  background:rgba(4,17,31,.82);border:1px solid var(--line-2);border-radius:999px;padding:.35rem .85rem;cursor:pointer;backdrop-filter:blur(6px);
+  transition:opacity .3s,visibility .3s}
 .pause:hover{color:var(--foam);border-color:var(--mist)}
-@media (prefers-reduced-motion:reduce){.feature .mark{transition:none}}
+/* the floating control only belongs over the water; past the hero the footer one takes over */
+.pause.away{opacity:0;visibility:hidden}
+.footer-pause{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;
+  text-decoration:underline;text-decoration-color:var(--mist);text-underline-offset:.18em;text-decoration-thickness:1px}
+.footer-pause:hover{color:var(--foam)}
 </style>
 </head>
 <body>
@@ -143,11 +144,9 @@ footer::before{content:"";position:absolute;inset:0 calc(50% - 50vw);z-index:-1;
     <li><a href="https://scholar.google.com/citations?user=IT6-kcAAAAAJ&amp;hl=en">Google Scholar</a></li>
     <li><a href="https://github.com/williamtoner">GitHub</a></li>
     <li><a href="https://www.linkedin.com/in/william-toner-ml">LinkedIn</a></li>
-    <li><a href="https://github.com/WToner">Personal GitHub</a></li>
     <!-- EDIT ME: add more, e.g. <li><a href="mailto:you@example.com">Email</a></li> -->
   </ul>
   </nav>
-  <p class="hint" id="hint">Move through the water. Click to scatter the school.</p>
 </header>
 
 <main class="wrap">
@@ -232,17 +231,21 @@ footer::before{content:"";position:absolute;inset:0 calc(50% - 50vw);z-index:-1;
         <h3 class="title"><a href="https://doi.org/10.5281/zenodo.23552885">Seventeen lonely runners, assuming sixteen</a></h3>
         <p class="what">A computer-assisted proof of the Lonely Runner Conjecture for seventeen runners, assuming the sixteen-runner case from Allikvere's recent preprint. It carries his method one case further, closing 91 prime gates with a GPU search. Not yet refereed; the code and certificates are on Zenodo.</p>
       </li>
+      <li class="row">
+        <span class="when">Oct 2026</span>
+        <h3 class="title"><a href="/DecodeAtlas/">How LLMs are split across GPUs</a></h3>
+        <p class="what">A picture guide to how frontier LLMs are deployed for decode.</p>
+      </li>
       <!-- TODO: /Feigenbaum/ and its GitHub repo are not public yet; this link 404s until they are. -->
       <li class="row">
         <span class="when">Oct 2026</span>
         <h3 class="title"><a href="/Feigenbaum/">The Feigenbaum constants to 10,000 digits</a></h3>
         <p class="what">The two universal numbers of period doubling, δ and α, to 10,000 digits for ordinary quadratic maps (the longest published table had 1,019) and 5,000 digits for quartic, sextic and octic maps. Every digit is checked three independent ways; they are computed, not proven. With interactive bifurcation diagrams.</p>
       </li>
-      <li class="row feature">
+      <li class="row">
         <span class="when">Oct 2026</span>
         <h3 class="title"><a href="/SnakeBox/">A record snake in the 13-dimensional cube</a></h3>
         <p class="what">A snake-in-the-box of 2946 edges in thirteen dimensions, improving on the previous best of 2938. Watch it draw itself, or verify it in your browser.</p>
-        <span class="mark" aria-hidden="true"></span>
       </li>
       <li class="row">
         <span class="when">Sep 2026</span>
@@ -263,14 +266,6 @@ footer::before{content:"";position:absolute;inset:0 calc(50% - 50vw);z-index:-1;
     </ul>
   </section>
 
-  <section aria-labelledby="pages">
-    <h2 id="pages">Other pages</h2>
-    <ul class="links pages">
-      <!-- TO ADD A PAGE: copy an <li> ... </li> line and edit it. -->
-      <li><a href="/DecodeAtlas/">How LLMs are split across GPUs</a></li>
-    </ul>
-  </section>
-
   <section aria-labelledby="background">
     <h2 id="background">Background</h2>
     <!-- TODO: the PhD and MMath rows show a label rather than years; add years if you want them to match the rows above. -->
@@ -286,16 +281,13 @@ footer::before{content:"";position:absolute;inset:0 calc(50% - 50vw);z-index:-1;
 </main>
 
 <footer class="wrap">
-  William Toner, 2026. This site lives on <a href="https://github.com/williamtoner/williamtoner.github.io">GitHub</a>.
+  William Toner, 2026. This site lives on <a href="https://github.com/williamtoner/williamtoner.github.io">GitHub</a>. <button class="footer-pause" id="pause2" type="button">Pause fish</button>
 </footer>
 </div>
 <script>
 (()=>{
 const cv=document.getElementById('sea'),ctx=cv.getContext('2d',{alpha:false});
 const motionQ=matchMedia('(prefers-reduced-motion: reduce)'),reduce=motionQ.matches;
-const touch=matchMedia('(hover: none)').matches;
-const hint=document.getElementById('hint');
-if(touch&&hint)hint.textContent='Touch the water. Tap to scatter the school.';
 
 /* muted species colours: [back, flank, glint] */
 const SPECIES=[
@@ -338,14 +330,14 @@ function resize(){
   // a height-only change keeps the same fish, just stretched to fit, instead of restarting the scene
   const fresh=!fish.length||W!==pw;
   if(fresh)populate();else if(H!==ph)for(const f of fish)f.y*=H/ph;
-  const ns=Math.round(W*H/14000);while(snow.length<ns)snow.push(makeSnow());snow.length=ns;
+  const ns=Math.round(W*H/28000);while(snow.length<ns)snow.push(makeSnow());snow.length=ns;
   if(!fresh)for(const s of snow)if(s.y>H)s.y=rnd(0,H);
   return fresh;
 }
 function populate(){
   fish=[];
-  const total=Math.round(Math.max(100,Math.min(340,W*H/4400)));
-  const nSchools=W<700?3:5;
+  const total=Math.round(Math.max(80,Math.min(150,W*H/6800)));
+  const nSchools=3;
   for(let k=0;k<nSchools;k++){
     const sp=k%SPECIES.length, layer=k%3===0?0:k%3===1?1:2;
     const n=Math.round(total/nSchools*(layer===0?1.3:layer===2?.75:1));
@@ -358,7 +350,7 @@ function makeFish(sp,layer,x,y,a){
   return{x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,sp,layer,len:Ly.len*rnd(.75,1.25),base:s,max:s*2.1,
     phase:rnd(0,6.28),flash:0,w:rnd(.85,1.1),ps:rnd(.6,1.7),wd:rnd(0,6.28)};
 }
-function makeSnow(){const d=Math.random();return{x:rnd(0,W),y:rnd(0,H),r:.4+d*d*2.2,s:rnd(.04,.16)*(.5+d),w:rnd(0,6.28),d}}
+function makeSnow(){const d=Math.random();return{x:rnd(0,W),y:rnd(0,H),r:.4+d*d*.9,s:rnd(.04,.16)*(.5+d),w:rnd(0,6.28),d}}
 
 /* ---------------- flocking ---------------- */
 function step(dt,t){
@@ -455,7 +447,7 @@ function paintLight(t){
   glow.addColorStop(0,'rgba(170,215,240,.13)');glow.addColorStop(.4,'rgba(100,170,215,.05)');glow.addColorStop(1,'rgba(100,170,215,0)');
   x.fillStyle=glow;x.fillRect(0,0,w,h);
   x.globalCompositeOperation='lighter';
-  const rays=7,len=h*1.15;
+  const rays=4,len=h*1.15;
   for(let i=0;i<rays;i++){
     const base=-.62+i*(1.24/(rays-1)),ang=Math.PI/2+base+Math.sin(t*.00011+i*1.9)*.045;
     const wid=.018+.016*(.5+.5*Math.sin(t*.00023+i*2.7));
@@ -467,13 +459,13 @@ function paintLight(t){
     x.lineTo(sx+Math.cos(ang-wid)*len,sy+Math.sin(ang-wid)*len);x.lineTo(sx+Math.cos(ang+wid)*len,sy+Math.sin(ang+wid)*len);x.closePath();x.fill();
   }
 }
-// a faint shimmer near the surface only, fading out well above the text
+// a whisper of shimmer near the surface only, fading out well above the text
 const caC=document.createElement('canvas'),caX=caC.getContext('2d');
 function paintCaustics(t){
   const w=caC.width,h=caC.height;caX.globalCompositeOperation='source-over';caX.clearRect(0,0,w,h);
   if(!pat)pat=caX.createPattern(texC,'repeat');
   caX.globalCompositeOperation='lighter';
-  const layers=[[.62,t*.0036,t*.0017,.08],[.86,-t*.0027,t*.003,.06],[.47,t*.0011,-t*.0024,.04]];
+  const layers=[[.62,t*.0036,t*.0017,.03]];
   for(const [sc,ox,oy,al] of layers){const m=new DOMMatrix([sc,0,0,sc*.62,ox,oy]);pat.setTransform(m);caX.globalAlpha=al;caX.fillStyle=pat;caX.fillRect(0,0,w,h)}
   caX.globalAlpha=1;caX.globalCompositeOperation='destination-in';
   const fg=caX.createLinearGradient(0,0,0,h);fg.addColorStop(0,'rgba(0,0,0,.6)');fg.addColorStop(.35,'rgba(0,0,0,.2)');fg.addColorStop(1,'rgba(0,0,0,0)');
@@ -557,11 +549,14 @@ document.addEventListener('mouseleave',()=>{ptr.active=false});
 addEventListener('pointerdown',e=>{if(!running||e.target.closest('a,button,input,textarea'))return;ripples.push({x:e.clientX,y:e.clientY,r:4,p:1});ptr.last=performance.now()},{passive:true});
 let paused=reduce;
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();else if(!paused)start()});
-const btn=document.getElementById('pause');
+const btn=document.getElementById('pause'),btns=[btn,document.getElementById('pause2')].filter(Boolean);
 // the label says what the button will do, so no aria-pressed (which would contradict a changing label)
-function syncBtn(){btn.textContent=paused?'Play fish':'Pause fish';if(hint)hint.hidden=paused}
+function syncBtn(){for(const b of btns)b.textContent=paused?'Play fish':'Pause fish'}
 function setPaused(p){paused=p;syncBtn();if(paused)stop();else if(!document.hidden)start()}
-btn.addEventListener('click',()=>setPaused(!paused));
+for(const b of btns)b.addEventListener('click',()=>setPaused(!paused));
+// hide the floating button once the hero has mostly scrolled away, so it never sits on the text
+if('IntersectionObserver' in window)new IntersectionObserver(([e])=>btn.classList.toggle('away',!e.isIntersecting),
+  {rootMargin:'-30% 0px 0px 0px'}).observe(document.querySelector('header'));
 // follow the OS setting if it changes while the page is open
 motionQ.addEventListener?.('change',e=>setPaused(e.matches));
 syncBtn();
